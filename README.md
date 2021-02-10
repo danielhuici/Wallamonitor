@@ -16,7 +16,7 @@ TELEGRAM_TOKEN=Your Telegram Token
 ### Usage 🔧
 
 ```
-$ python -h
+$ python alert.py -h
 usage: alert.py [-h] --name NAME [--latitude LATITUDE] [--longitude LONGITUDE] [--condition CONDITION]
                 [--min MIN_PRICE] [--max MAX_PRICE]
 
