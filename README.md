@@ -11,7 +11,7 @@ You will also need to change .env parameters:
 ```
 TELEGRAM_CHANNEL_ID=@Your_Telegram_Channel_ID
 TELEGRAM_TOKEN=Your Telegram Token
-``
+```
 
 ### Usage 🔧
 
@@ -30,7 +30,7 @@ optional arguments:
   --condition CONDITION   Item condition: all, new, as_good_as_new, good, fair, has_given_it_all
   --min MIN_PRICE         Min price
   --max MAX_PRICE         Max price
-  ```
+```
 
 Example:
 ``` 
