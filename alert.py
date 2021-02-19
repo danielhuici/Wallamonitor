@@ -32,20 +32,38 @@ def request(product_name, n_articles, latitude, longitude, condition, min_price,
 
     json_data=json.loads(response.text)
     return json_data['search_objects']
+
+ 
+# We'll insert ignore current items in Wallapop,
+# Only alert new articles published from NOW!
+def first_run():
+    list = []
+    articles = request(args.name, 0, args.latitude, args.longitude, args.condition, args.min_price, args.max_price)
+    for article in articles: 
+        list.insert(0, article['id'])
+
+    return list
     
 def main(args):
     bot = telegram.Bot(token = TELEGRAM_TOKEN)
-    list = []
+    list = first_run()
 
     while True:
         articles = request(args.name, 0, args.latitude, args.longitude, args.condition, args.min_price, args.max_price)
         for article in articles:
             if not article['id'] in list:
                 bot.send_photo(TELEGRAM_CHANNEL_ID, article['images'][0]['original'])
-                bot.send_message(TELEGRAM_CHANNEL_ID, f"*Artículo*: {article['title']}\n"
-                                                    f"*Descripción*: {article['description']}\n"
-                                                    f"*Precio*: {article['price']} {article['currency']}\n"
-                                                    f"[Ir al anuncio](https://es.wallapop.com/item/{article['web_slug']})"
+                try:
+                    bot.send_message(TELEGRAM_CHANNEL_ID, f"*Artículo*: {article['title']}\n"
+                                                        f"*Descripción*: {article['description']}\n"
+                                                        f"*Precio*: {article['price']} {article['currency']}\n"
+                                                        f"[Ir al anuncio](https://es.wallapop.com/item/{article['web_slug']})"
+                                                    , "MARKDOWN")
+                except:
+                    bot.send_message(TELEGRAM_CHANNEL_ID, f"*Artículo*: {article['title']}\n"
+                                                        f"*Descripción*: Descripción inválida\n"
+                                                        f"*Precio*: {article['price']} {article['currency']}\n"
+                                                        f"[Ir al anuncio](https://es.wallapop.com/item/{article['web_slug']})"
                                                     , "MARKDOWN")
                 list.insert(0, article['id'])
                 time.sleep(5) # Avoid Telegram flood restrictions
