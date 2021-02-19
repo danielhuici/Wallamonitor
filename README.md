@@ -13,7 +13,7 @@ TELEGRAM_CHANNEL_ID=@Your_Telegram_Channel_ID
 TELEGRAM_TOKEN=Your Telegram Token
 ```
 
-### Usage 🔧
+### Usage
 
 ```
 $ python alert.py -h
