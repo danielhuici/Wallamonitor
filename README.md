@@ -3,8 +3,8 @@ Periodically checks Wallapop for new articles based on specified parameters and 
 
 ### Setup 🔧
 ```
-pip install -U python-dotenv
-pip install python-telegram-bot 
+pip3 install -U python-dotenv
+pip3 install python-telegram-bot 
 ```
 
 You will also need to change .env parameters:
@@ -16,7 +16,7 @@ TELEGRAM_TOKEN=Your Telegram Token
 ### Usage
 
 ```
-$ python alert.py -h
+$ python3 alert.py -h
 usage: alert.py [-h] --name NAME [--latitude LATITUDE] [--longitude LONGITUDE] [--condition CONDITION]
                 [--min MIN_PRICE] [--max MAX_PRICE]
 
@@ -34,7 +34,7 @@ optional arguments:
 
 Example:
 ``` 
-$ python alert.py --name ps5 --condition new --min 400 --max 600
+$ python3 alert.py --name ps5 --condition new --min 400 --max 600
 ```
   
   
