@@ -26,9 +26,10 @@ def request(product_name, n_articles, latitude, longitude, condition, min_price,
         url = url + f"&condition={condition}" # new, as_good_as_new, good, fair, has_given_it_all
 
     response = requests.get(url)
-    if response.status_code != 200:
-        print(f"Wallapop returned status {response.status_code}. Illegal parameters or Wallapop service is down")
-        exit
+    while response.status_code != 200:
+        print(f"Wallapop returned status {response.status_code}. Illegal parameters or Wallapop service is down. Sleep...")
+        time.sleep(SLEEP_TIME)
+        response = requests.get(url)
 
     json_data=json.loads(response.text)
     return json_data['search_objects']
