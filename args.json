@@ -1,92 +1,52 @@
 [
   {
-    "product_name": "ps4",
+    "product_name": "placa base",
     "latitude": "40.4165",
     "longitude": "-3.70256",
     "condition": "all",
-    "min_price": "40",
-    "max_price": "80",
-	"title_key_word_exclude" : ["juego", "juegos", "Juego", "mando", "Mando", "DualShock"],
-	"exclude": []
-  },
-  {
-    "product_name": "ps4",
-    "latitude": "40.4165",
-    "longitude": "-3.70256",
-    "condition": "has_given_it_all",
     "min_price": "20",
-    "max_price": "50",
-	"title_key_word_exclude" : [],
-	"exclude": []
+    "max_price": "75",
+        "title_keyword_exclude" : [],
+        "exclude": []
   },
-  {
-    "product_name": "3ds",
+ {
+    "product_name": "ram",
     "latitude": "40.4165",
     "longitude": "-3.70256",
     "condition": "all",
-    "min_price": "15",
-    "max_price": "60",
-	"title_key_word_exclude" : ["juego", "juegos", "Juego", "Juegos", "pokemon", "Pokemon"],
-	"exclude": []
+    "min_price": "10",
+    "max_price": "40",
+        "title_keyword_exclude" : [],
+        "exclude": []
   },
-  {
-    "product_name": "nvidia",
-    "latitude": "40.4165",
-    "longitude": "-3.70256",
-    "condition": "all",
-    "min_price": "80",
-    "max_price": "160",
-	"title_key_word_exclude" : [],
-	"exclude": []
-  },
-  {
-    "product_name": "gtx",
-    "latitude": "40.4165",
-    "longitude": "-3.70256",
-    "condition": "all",
-    "min_price": "80",
-    "max_price": "160",
-	"title_key_word_exclude" : [],
-	"exclude": ["1050", "950", "960"]
-  },
-  {
+{
     "product_name": "grafica",
-    "latitude": "40.4165",
-    "longitude": "-3.70256",
-    "condition": "all",
-    "min_price": "80",
-    "max_price": "160",
-	"title_key_word_exclude" : [],
-	"exclude": ["1050", "950", "960"]
-  },
-  {
-    "product_name": "iphone",
     "latitude": "40.4165",
     "longitude": "-3.70256",
     "condition": "all",
     "min_price": "90",
     "max_price": "200",
-	"title_key_word_exclude" : [],
-	"exclude": ["iphone 6", "iphone 7", "iPhone 7", "iPhone 8", "Iphone 6", "Iphone 7"]
+        "title_keyword_exclude" : [],
+        "exclude": ["1050", "960"]
   },
-  {
-    "product_name": "mac",
+{
+    "product_name": "nvidia",
     "latitude": "40.4165",
     "longitude": "-3.70256",
     "condition": "all",
-    "min_price": "100",
+    "min_price": "90",
     "max_price": "200",
-	"title_key_word_exclude" : [],
-	"exclude": []
+        "title_keyword_exclude" : [],
+        "exclude": ["1050", "960"]
   },
-  {
-    "product_name": "surface",
+{
+    "product_name": "gtx",
     "latitude": "40.4165",
     "longitude": "-3.70256",
     "condition": "all",
-    "min_price": "100",
-    "max_price": "300",
-	"title_key_word_exclude" : [],
-	"exclude": [""]
+    "min_price": "90",
+    "max_price": "200",
+        "title_keyword_exclude" : [],
+        "exclude": ["1050", "960"]
   }
 ]

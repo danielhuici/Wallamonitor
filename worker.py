@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 import os
 load_dotenv()
 import threading
-from proxy_requests import ProxyRequests
 
 
 TELEGRAM_CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID") 
@@ -28,17 +27,17 @@ class Worker:
             url = url + f"&condition={condition}" # new, as_good_as_new, good, fair, has_given_it_all
 
         while True:
-            response = ProxyRequests(url)
+            response = requests.get(url)
             try:
-                response.get()
-                if response.get_status_code() == 200:
+                if response.status_code == 200:
                     break
                 else:
                     print(f"\'{product_name}\' -> Wallapop returned status {response.get_status_code() }. Illegal parameters or Wallapop service is down. Retrying...")
-            except:
+            except Exception as e:
+                print("Exception: "+e)
                 time.sleep(3)
 
-        json_data=json.loads(response.get_raw())
+        json_data=response.json()
         return json_data['search_objects']
 
     def first_run(self, args):
@@ -58,21 +57,31 @@ class Worker:
             articles = self.request(args['product_name'], 0, args['latitude'], args['longitude'], args['condition'], args['min_price'], args['max_price'])
             for article in articles:
                 if not article['id'] in list:
-                    if not self.has_excluded_words(article['title'].lower(), article['description'].lower(), args['exclude']) and not self.is_title_key_word_excluded(article['title'].lower(), args['title_key_word_exclude']):
-                        try:
-                            bot.send_message(TELEGRAM_CHANNEL_ID, f"*Artículo*: {article['title']}\n"
-                                                                f"*Descripción*: {article['description']}\n"
-                                                                f"*Precio*: {article['price']} {article['currency']}\n"
-                                                                f"[Ir al anuncio](https://es.wallapop.com/item/{article['web_slug']})"
-                                                            , "MARKDOWN")
-                        except:
-                            bot.send_message(TELEGRAM_CHANNEL_ID, f"*Artículo*: {article['title']}\n"
-                                                                f"*Descripción*: Descripción inválida\n"
-                                                                f"*Precio*: {article['price']} {article['currency']}\n"
-                                                                f"[Ir al anuncio](https://es.wallapop.com/item/{article['web_slug']})"
-                                                            , "MARKDOWN")
-                        time.sleep(3) # Avoid Telegram flood restriction
-                    list.insert(0, article['id'])   
+                    try:
+                        if not self.has_excluded_words(article['title'].lower(), article['description'].lower(), args['exclude']) and not self.is_title_key_word_excluded(article['title'].lower(), args['title_keyword_exclude']):
+                            try:
+                                bot.send_message(TELEGRAM_CHANNEL_ID, f"*Artículo*: {article['title']}\n"
+                                                                    f"*Descripción*: {article['description']}\n"
+                                                                    f"*Precio*: {article['price']} {article['currency']}\n"
+                                                                    f"[Ir al anuncio](https://es.wallapop.com/item/{article['web_slug']})"
+                                                                , "MARKDOWN")
+                            except:
+                                bot.send_message(TELEGRAM_CHANNEL_ID, f"*Artículo*: {article['title']}\n"
+                                                                    f"*Descripción*: Descripción inválida\n"
+                                                                    f"*Precio*: {article['price']} {article['currency']}\n"
+                                                                    f"[Ir al anuncio](https://es.wallapop.com/item/{article['web_slug']})"
+                                                                , "MARKDOWN")
+                            time.sleep(1) # Avoid Telegram flood restriction
+                        list.insert(0, article['id'])   
+                    except Exception as e:
+                        print("---------- EXCEPTION -----------")
+                        f = open("error_log.txt", "a")
+                        f.write(f"{args['product_name']} worker crashed. {e}")
+                        f.write(f"{args['product_name']}: Trying to parse {article['id']}: {article['title']} .")
+                        f.close()
+
+
+            time.sleep(5)
             exec_times.append(time.time() - start_time)
             print(f"\'{args['product_name']}\' node-> last: {exec_times[-1]} max: {self.get_max_time(exec_times)} avg: {self.get_average_time(exec_times)}")
 
@@ -110,11 +119,11 @@ class Worker:
         worker = Worker()
         list = worker.first_run(args)
         while True:
-            try:
-                print(f"Wallapop monitor worker started. Checking for new items containing: \'{args['product_name']}\' with given parameters periodically")
-                worker.work(args, list)
-            except Exception as e:
-                print(f"Exception: {e}")
-                print(f"{args['product_name']} worker crashed. Restarting worker...")
-                time.sleep(15)
+            #try:
+            print(f"Wallapop monitor worker started. Checking for new items containing: \'{args['product_name']}\' with given parameters periodically")
+            worker.work(args, list)
+            #except Exception as e:
+            #    print(f"Exception: {e}")
+            #    print(f"{args['product_name']} worker crashed. Restarting worker...")
+            #    time.sleep(10)
 
