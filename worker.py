@@ -15,7 +15,7 @@ SLEEP_TIME=30
 
 class Worker:
 
-    def request(self, product_name, n_articles, latitude='40.4165', longitude='-3.70256', condition='all', min_price=0, max_price=10000000):
+    def request(self, product_name, n_articles, latitude='40.4165', longitude='-3.70256', distance='0', condition='all', min_price=0, max_price=10000000):
         url = (f"http://api.wallapop.com/api/v3/general/search?keywords={product_name}"
                     f"&order_by=newest&latitude={latitude}"
                     f"&longitude={longitude}"
@@ -55,7 +55,7 @@ class Worker:
         
         while True:
             start_time = time.time()
-            articles = self.request(args['product_name'], 0, args['latitude'], args['longitude'], args['condition'], args['min_price'], args['max_price'])
+            articles = self.request(args['product_name'], 0, args['latitude'], args['longitude'], args['distance'], args['condition'], args['min_price'], args['max_price'])
             for article in articles:
                 if not article['id'] in list:
                     try:
