@@ -19,6 +19,7 @@ class Worker:
         url = (f"http://api.wallapop.com/api/v3/general/search?keywords={product_name}"
                     f"&order_by=newest&latitude={latitude}"
                     f"&longitude={longitude}"
+                    f"&distance={distance}"
                     f"&min_sale_price={min_price}" 
                     f"&max_sale_price={max_price}" 
                     f"&filters_source=quick_filters&language=es_ES")
