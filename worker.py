@@ -43,7 +43,7 @@ class Worker:
 
     def first_run(self, args):
         list = []
-        articles = self.request(args['product_name'], 0, args['latitude'], args['longitude'], args['condition'], args['min_price'], args['max_price'])
+        articles = self.request(args['product_name'], 0, args['latitude'], args['longitude'], args['distance'], args['condition'], args['min_price'], args['max_price'])
         for article in articles: 
             list.insert(0, article['id'])
         
