@@ -14,27 +14,33 @@ TELEGRAM_TOKEN=Your Telegram Token
 ```
 
 ### Usage
+1. Create a `args.json` file and fill it with following parameters (JSON):
 
 ```
-$ python3 alert.py -h
-usage: alert.py [-h] --name NAME [--latitude LATITUDE] [--longitude LONGITUDE] [--condition CONDITION]
-                [--min MIN_PRICE] [--max MAX_PRICE]
+[
+  {
+    "product_name": "name", # Find products containing name
+    "distance": "0", # Distance search range (Meters). Use 0 for no limits
+    "latitude": "", # Latitude origin for distance search
+    "longitude": "", # Longitude origin for distance search
+    "condition": "all", # Can be: all, new, as_good_as_new, good, fair, has_given_it_all
+    "min_price": "40", # Minimum price
+    "max_price": "80", # Maximum price
+	  "title_keyword_exclude" : ["word1", "word2"], # Exclude an item if it contains one of this words
+	  "exclude": ["word1", "word2"] # Exclude an item if title or description contains one of this words
+  },
+  
+  ...
+]
 
-Arguments
-
-optional arguments:
-  -h, --help              show this help message and exit
-  --name NAME             Article name
-  --latitude LATITUDE     Latitude
-  --longitude LONGITUDE   Longitude
-  --condition CONDITION   Item condition: all, new, as_good_as_new, good, fair, has_given_it_all
-  --min MIN_PRICE         Min price
-  --max MAX_PRICE         Max price
 ```
 
-Example:
+Check the file `args.json` of this repo for an example.
+
+
+2. Run:
 ``` 
-$ python3 alert.py --name ps5 --condition new --min 400 --max 600
-```
-  
-  
+$ python3 alert.py
+```  
+
+
