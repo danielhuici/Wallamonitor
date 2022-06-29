@@ -1,17 +1,13 @@
 import time
 import requests
-import json
 import telegram
-import argparse
 from dotenv import load_dotenv
 import os
 load_dotenv()
-import threading
-
 
 TELEGRAM_CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID") 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
-SLEEP_TIME=30
+SLEEP_TIME = 5
 
 class Worker:
 
@@ -33,12 +29,12 @@ class Worker:
                 if response.status_code == 200:
                     break
                 else:
-                    print(f"\'{product_name}\' -> Wallapop returned status {response.get_status_code() }. Illegal parameters or Wallapop service is down. Retrying...")
+                    print(f"\'{product_name}\' -> Wallapop returned status {response.status_code}. Illegal parameters or Wallapop service is down. Retrying...")
             except Exception as e:
-                print("Exception: "+e)
+                print("Exception: " + e)
                 time.sleep(3)
 
-        json_data=response.json()
+        json_data = response.json()
         return json_data['search_objects']
 
     def first_run(self, args):
@@ -59,6 +55,7 @@ class Worker:
             for article in articles:
                 if not article['id'] in list:
                     try:
+
                         if not self.has_excluded_words(article['title'].lower(), article['description'].lower(), args['exclude']) and not self.is_title_key_word_excluded(article['title'].lower(), args['title_keyword_exclude']):
                             try:
                                 bot.send_message(TELEGRAM_CHANNEL_ID, f"*Artículo*: {article['title']}\n"
@@ -78,11 +75,11 @@ class Worker:
                         print("---------- EXCEPTION -----------")
                         f = open("error_log.txt", "a")
                         f.write(f"{args['product_name']} worker crashed. {e}")
-                        f.write(f"{args['product_name']}: Trying to parse {article['id']}: {article['title']} .")
+                        f.write(f"{args['product_name']}: Trying to parse {article['id']}: {article['title']} .\n")
                         f.close()
 
 
-            time.sleep(5)
+            time.sleep(SLEEP_TIME)
             exec_times.append(time.time() - start_time)
             print(f"\'{args['product_name']}\' node-> last: {exec_times[-1]} max: {self.get_max_time(exec_times)} avg: {self.get_average_time(exec_times)}")
 
@@ -120,11 +117,11 @@ class Worker:
         worker = Worker()
         list = worker.first_run(args)
         while True:
-            #try:
-            print(f"Wallapop monitor worker started. Checking for new items containing: \'{args['product_name']}\' with given parameters periodically")
-            worker.work(args, list)
-            #except Exception as e:
-            #    print(f"Exception: {e}")
-            #    print(f"{args['product_name']} worker crashed. Restarting worker...")
-            #    time.sleep(10)
+            try:
+                print(f"Wallapop monitor worker started. Checking for new items containing: \'{args['product_name']}\' with given parameters periodically")
+                worker.work(args, list)
+            except Exception as e:
+                print(f"Exception: {e}")
+                print(f"{args['product_name']} worker crashed. Restarting worker...")
+                time.sleep(10)
 
