@@ -1,6 +1,7 @@
 [
   {
     "product_name": "placa base",
+    "distance": "0", 
     "latitude": "40.4165",
     "longitude": "-3.70256",
     "condition": "all",
@@ -11,6 +12,7 @@
   },
  {
     "product_name": "ram",
+    "distance": "0", 
     "latitude": "40.4165",
     "longitude": "-3.70256",
     "condition": "all",
@@ -21,6 +23,7 @@
   },
 {
     "product_name": "grafica",
+    "distance": "0", 
     "latitude": "40.4165",
     "longitude": "-3.70256",
     "condition": "all",
@@ -31,6 +34,7 @@
   },
 {
     "product_name": "nvidia",
+    "distance": "0", 
     "latitude": "40.4165",
     "longitude": "-3.70256",
     "condition": "all",
@@ -41,6 +45,7 @@
   },
 {
     "product_name": "gtx",
+    "distance": "0", 
     "latitude": "40.4165",
     "longitude": "-3.70256",
     "condition": "all",
