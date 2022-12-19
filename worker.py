@@ -94,7 +94,7 @@ class Worker:
     def is_title_key_word_excluded(self, title, excluded_words):
         for word in excluded_words:
             print("Checking '" + word + "' for title: '" + title)
-            if word in title.split()[0]:
+            if word in title:
                 return True
         return False
 
