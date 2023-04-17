@@ -56,7 +56,11 @@ class Worker:
                 if not article['id'] in list:
                     try:
 
-                        if not self.has_excluded_words(article['title'].lower(), article['description'].lower(), args['exclude']) and not self.is_title_key_word_excluded(article['title'].lower(), args['title_keyword_exclude']):
+                        if (not self.has_excluded_words(article['title'].lower(), article['description'].lower(), args['exclude']) 
+                            and not self.is_title_key_word_excluded(article['title'].lower(), args['title_keyword_exclude'])
+                            and (self.has_included_words(article['title'].lower(), article['description'].lower(), args['include'])
+                            or self.is_title_key_word_included(article['title'].lower(), args['title_keyword_include']))):
+                            
                             try:
                                 bot.send_message(TELEGRAM_CHANNEL_ID, f"*Artículo*: {article['title']}\n"
                                                                     f"*Descripción*: {article['description']}\n"
@@ -93,6 +97,21 @@ class Worker:
     
     def is_title_key_word_excluded(self, title, excluded_words):
         for word in excluded_words:
+            print("Checking '" + word + "' for title: '" + title)
+            if word in title:
+                return True
+        return False
+    
+    def has_included_words(self, title, description, included_words):
+        for word in included_words:
+            print("INCLUDER: Checking '" + word + "' for title: '" + title)
+            if word in title or word in description:
+                print("INCLUDE!")
+                return True
+        return False
+        
+    def is_title_key_word_included(self, title, included_words):
+        for word in included_words:
             print("Checking '" + word + "' for title: '" + title)
             if word in title:
                 return True
