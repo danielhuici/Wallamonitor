@@ -90,7 +90,7 @@ class Worker:
         while True:
             start_time = time.time()
             articles = self._request_articles()
-            for article in articles[0:1]:
+            for article in articles:
                 if self._meets_item_conditions(article):
                     try:
                         self._telegram_handler.send_telegram_article(article)
