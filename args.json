@@ -1,57 +1,106 @@
 [
   {
-    "product_name": "placa base",
-    "distance": "0", 
+    "search_query": "ps4",
     "latitude": "40.4165",
     "longitude": "-3.70256",
+    "max_distance":"0",
     "condition": "all",
     "min_price": "20",
-    "max_price": "75",
-        "title_keyword_exclude" : [],
-        "exclude": []
+    "max_price": "80",
+    "title_exclude" : ["DualShock", "Volante"],
+    "description_exclude": [],
+    "title_must_include" : [],
+    "description_must_include" : []
   },
- {
-    "product_name": "ram",
-    "distance": "0", 
+  {
+    "search_query": "3ds",
+    "max_distance":"0",
     "latitude": "40.4165",
     "longitude": "-3.70256",
     "condition": "all",
-    "min_price": "10",
-    "max_price": "40",
-        "title_keyword_exclude" : [],
-        "exclude": []
+    "min_price": "15",
+    "max_price": "70",
+    "title_exclude" : ["pokemon", "Pokemon"],
+    "description_exclude": [],
+    "title_must_include" : [],
+    "description_must_include" : []
   },
-{
-    "product_name": "grafica",
-    "distance": "0", 
+  {
+    "search_query": "2ds",
+    "max_distance":"0",
     "latitude": "40.4165",
     "longitude": "-3.70256",
     "condition": "all",
-    "min_price": "90",
-    "max_price": "200",
-        "title_keyword_exclude" : [],
-        "exclude": ["1050", "960"]
+    "min_price": "15",
+    "max_price": "60",
+    "title_keyword_exclude" : ["pokemon", "Pokemon"],
+    "exclude": [],
+    "title_must_include" : [],
+    "description_must_include" : []
   },
-{
-    "product_name": "nvidia",
-    "distance": "0", 
+  {
+    "search_query": "nvidia",
+    "max_distance":"0",
     "latitude": "40.4165",
     "longitude": "-3.70256",
     "condition": "all",
-    "min_price": "90",
-    "max_price": "200",
-        "title_keyword_exclude" : [],
-        "exclude": ["1050", "960"]
+    "min_price": "80",
+    "max_price": "160",
+    "title_exclude" : ["ordenador"],
+    "description_exclude": [],
+    "title_must_include" : [],
+    "description_must_include" : []
   },
-{
-    "product_name": "gtx",
-    "distance": "0", 
+  {
+    "search_query": "gtx",
+    "max_distance":"0",
     "latitude": "40.4165",
     "longitude": "-3.70256",
     "condition": "all",
-    "min_price": "90",
-    "max_price": "200",
-        "title_keyword_exclude" : [],
-        "exclude": ["1050", "960"]
-  }
+    "min_price": "80",
+    "max_price": "160",
+    "title_exclude" : ["ordenador"],
+    "description_exclude": ["1050", "950", "960"],
+    "title_must_include" : [],
+    "description_must_include" : []
+  },
+  {
+    "search_query": "grafica",
+    "max_distance":"0",
+    "latitude": "40.4165",
+    "longitude": "-3.70256",
+    "condition": "all",
+    "min_price": "80",
+    "max_price": "160",
+    "title_exclude" : ["ordenador"],
+    "description_exclude": ["1050", "950", "960"],
+    "title_must_include" : [],
+    "description_must_include" : []
+  },
+  {
+    "search_query": "ps5",
+    "max_distance":"0",
+    "latitude": "40.4165",
+    "longitude": "-3.70256",
+    "condition": "all",
+    "min_price": "100",
+    "max_price": "300",
+    "title_exclude" : [],
+    "description_exclude": [],
+    "title_must_include" : [],
+    "description_must_include" : []
+  },
+  {
+      "search_query": "switch",
+      "max_distance":"0",
+      "latitude": "40.4165",
+      "longitude": "-3.70256",
+      "condition": "all",
+      "min_price": "50",
+      "max_price": "200",
+      "title_exclude" : [],
+      "description_exclude": [],
+      "title_must_include" : [],
+      "description_must_include" : []
+    }
 ]
