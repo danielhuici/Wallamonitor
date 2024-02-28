@@ -10,6 +10,7 @@ REQUEST_SLEEP_TIME = 10
 REQUEST_RETRY_TIME = 3
 ERROR_SLEEP_TIME = 10
 NOTIFIED_ARTICLES_LIMIT = 300
+USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'
 
 class Worker:
     def __init__(self, item_to_monitor):
@@ -34,7 +35,7 @@ class Worker:
 
         while True:
             try:
-                response = requests.get(url)
+                response = requests.get(url, headers={'User-Agent': USER_AGENT})
                 response.raise_for_status()
                 break
             except requests.exceptions.RequestException as err:
