@@ -1,13 +1,12 @@
 # Wallamonitor
-Periodically checks Wallapop for new articles based on specified parameters and notify through Telegram channel.
+Periodically checks Wallapop for new articles based on specified parameters and notify them through Telegram channel.
 
 ### Setup 🔧
 ```
-pip3 install -U python-dotenv
-pip3 install python-telegram-bot 
+pip3 install pyyaml python-telegram-bot 
 ```
 
-You will also need to change .env parameters:
+You will also need to set your Telegram config at `config.yaml`:
 ```
 TELEGRAM_CHANNEL_ID=@Your_Telegram_Channel_ID
 TELEGRAM_TOKEN=Your Telegram Token
@@ -19,16 +18,19 @@ TELEGRAM_TOKEN=Your Telegram Token
 ```
 [
   {
-    "product_name": "name", # Find products containing name
-    "distance": "0", # Distance search range (Meters). Use 0 for no limits
-    "latitude": "", # Latitude origin for distance search
-    "longitude": "", # Longitude origin for distance search
+    "search_query": "search query", # Find products containing...
+    "latitude": "40.4165", # Latitude origin for distance search
+    "longitude": "-3.70256", # Longitude origin for distance search
+    "max_distance":"0", # Distance search range (in meters). Use 0 for unlimited distance
     "condition": "all", # Can be: all, new, as_good_as_new, good, fair, has_given_it_all
-    "min_price": "40", # Minimum price
+    "min_price": "20", # Minimum price
     "max_price": "80", # Maximum price
-	  "title_keyword_exclude" : ["word1", "word2"], # Exclude an item if it contains one of this words
-	  "exclude": ["word1", "word2"] # Exclude an item if title or description contains one of this words
+    "title_exclude" : [], # Exclude an item if title contains one of this words
+    "description_exclude": [], # Exclude an item if description contains one of this words
+    "title_must_include" : [], # Exclude an item if title does not contains one of this words
+    "description_must_include" : [] # Exclude an item if description does not contains one of this words
   },
+
   
   ...
 ]
@@ -40,7 +42,7 @@ Check the file `args.json` of this repo for an example.
 
 2. Run:
 ``` 
-$ python3 alert.py
+$ python3 main.py
 ```  
 
 
