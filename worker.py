@@ -6,13 +6,10 @@ from telegram_handler import TelegramHandler
 import traceback
 import asyncio
 
-REQUEST_SLEEP_TIME = 5
+REQUEST_SLEEP_TIME = 10
 REQUEST_RETRY_TIME = 3
 ERROR_SLEEP_TIME = 10
-
-worker_logger = logging.getLogger(__name__)
-worker_logger.setLevel(logging.INFO)  # Set the level as needed
-worker_logger.addHandler(logging.StreamHandler())
+NOTIFIED_ARTICLES_LIMIT = 300
 
 class Worker:
     def __init__(self, item_to_monitor):
@@ -57,32 +54,44 @@ class Worker:
     def _has_words(self, text, word_list):
         return any(word in text for word in word_list)
 
-    def _title_has_excluded_words(self, article):
-        return self._has_words(article.get_title(), 
-                               self._item_monitoring.get_title_exclude())
+    def _title_has_excluded_words(self, article_title):
+        return self._has_words(article_title, self._item_monitoring.get_title_exclude())
 
-    def _description_has_excluded_words(self, article):
-        return self._has_words(article.get_description(), 
-                               self._item_monitoring.get_description_exclude())
+    def _description_has_excluded_words(self, article_description):
+        return self._has_words(article_description, self._item_monitoring.get_description_exclude())
 
-    def _title_has_required_words(self, article):
+    def _title_has_required_words(self, article_title):
         return not self._item_monitoring.get_title_must_include() \
-                or self._has_words(article.get_title(),
-                                   self._item_monitoring.get_title_must_include())
+                or self._has_words(article_title, self._item_monitoring.get_title_must_include())
 
-    def _description_has_required_words(self, article):
+    def _description_has_required_words(self, article_description):
         return not self._item_monitoring.get_description_must_include() \
-                or self._has_words(article.get_description(), 
-                                   self._item_monitoring.get_description_must_include())
+                or self._has_words(article_description, self._item_monitoring.get_description_must_include())
+
+    def _title_first_word_is_excluded(self, article_title):
+        first_word = article_title.split()[0]
+        for excluded_word in self._item_monitoring.get_title_first_word_exclude():
+            if first_word == excluded_word:
+                return True
+        return False
 
     def _meets_item_conditions(self, article):
-        return (
-            self._title_has_required_words(article) and
-            self._description_has_required_words(article) and
-            not self._title_has_excluded_words(article) and
-            not self._description_has_excluded_words(article) and
-            article not in self._notified_articles
-        )
+        if article in self._notified_articles:
+            return False
+
+        article_title = article.get_title().lower()
+        article_description = article.get_description().lower()
+        if (
+            self._title_has_required_words(article_title) and
+            self._description_has_required_words(article_description) and
+            not self._title_has_excluded_words(article_title) and
+            not self._description_has_excluded_words(article_description) and
+            not self._title_first_word_is_excluded(article_title)
+        ):
+            return True
+        else:
+            self.logger.info(f"Excluded article: {article}")
+            return False
 
     def work(self):
         exec_times = []
@@ -94,12 +103,13 @@ class Worker:
                 if self._meets_item_conditions(article):
                     try:
                         self._telegram_handler.send_telegram_article(article)
-                        self._notified_articles.insert(0, article)
                     except Exception as e:
                         self.logger.error(f"{self._item_monitoring.get_search_query()} worker crashed: {e}")
+                self._notified_articles.insert(0, article)
+                self._notified_articles = self._notified_articles[:NOTIFIED_ARTICLES_LIMIT]
             time.sleep(REQUEST_SLEEP_TIME)
             exec_times.append(time.time() - start_time)
-            self.logger.info(f"\'{self._item_monitoring.get_search_query()}\' node-> last: {exec_times[-1]}"
+            self.logger.debug(f"\'{self._item_monitoring.get_search_query()}\' node-> last: {exec_times[-1]}"
                              f" max: {max(exec_times)} avg: {sum(exec_times) / len(exec_times)}")
     
     def run(self):

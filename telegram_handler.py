@@ -6,10 +6,13 @@ import telegram
 import re
 
 
-ITEM_TEXT = "*Artículo*: {}\n" \
-            "*Descripción*: {}\n" \
-            "*Precio*: {} {}\n" \
+ITEM_TEXT = "- *Artículo*: {}\n" \
+            "- *Descripción*: {}\n" \
+            "- *Localidad*: {}\n" \
+            "- *Precio*: {} {}\n" \
+            "- *Acepta envíos*: {}\n" \
             "[Ir al anuncio](https://es.wallapop.com/item/{})"
+
 
 class TelegramHandler:
     def __init__(self):
@@ -37,8 +40,9 @@ class TelegramHandler:
         self._loop.run_until_complete(self.send_telegram_article_async(article))
 
     async def send_telegram_article_async(self, article):
-        message = ITEM_TEXT.format(article.get_title(), article.get_description(),
-                                   article.get_price(), article.get_currency(),
+        message = ITEM_TEXT.format(article.get_title(), self.escape_markdown(article.get_description()),
+                                   self.escape_markdown(article.get_location()), article.get_price(), 
+                                   article.get_currency(), article.get_allows_shipping(),
                                    article.get_url())
         escaped_message = self.escape_markdown(message)
         await self._bot.send_message(self._channel, text=escaped_message, parse_mode="MarkdownV2")
