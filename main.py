@@ -1,9 +1,11 @@
 import json
-import threading
 import logging
 from logging.handlers import RotatingFileHandler
+from concurrent.futures import ThreadPoolExecutor
+
 from datalayer.item_monitor import ItemMonitor
 from worker import Worker
+from managers.telegram_manager import TelegramManager
 
 def configure_logger():
     console_handler = logging.StreamHandler()
@@ -28,7 +30,8 @@ if __name__ == "__main__":
     configure_logger()
     items = parse_items_to_monitor()
 
-    for item in items:
-        worker = Worker(item)
-        thread = threading.Thread(target=worker.run)
-        thread.start()
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        for item in items:
+            worker = Worker(item)
+            executor.submit(worker.run)
+
