@@ -1,10 +1,9 @@
 import time
 import requests
 import logging
-from article import Article
-from telegram_handler import TelegramHandler
+from datalayer.wallapop_article import WallapopArticle
+from managers.telegram_manager import TelegramManager
 import traceback
-import asyncio
 
 REQUEST_SLEEP_TIME = 10
 REQUEST_RETRY_TIME = 3
@@ -16,8 +15,8 @@ class Worker:
     def __init__(self, item_to_monitor):
         self.logger = logging.getLogger(__name__)
         self._item_monitoring = item_to_monitor
-        self._notified_articles = self._request_articles()
-        self._telegram_handler = TelegramHandler()
+        self._notified_articles = self._request_articles()[1:]
+        self.telegram_manager = TelegramManager()
 
     def _request_articles(self):
         url = (
@@ -35,7 +34,11 @@ class Worker:
 
         while True:
             try:
-                response = requests.get(url, headers={'User-Agent': USER_AGENT})
+                headers = {
+                    'X-DeviceOS': '0',
+                    'User-Agent': USER_AGENT
+                }
+                response = requests.get(url, headers=headers)
                 response.raise_for_status()
                 break
             except requests.exceptions.RequestException as err:
@@ -49,7 +52,7 @@ class Worker:
     def _parse_json_response(self, json_response):
         articles = []
         for json_article in json_response:
-            articles.append(Article.load_from_json(json_article))
+            articles.append(WallapopArticle.load_from_json(json_article))
         return articles
 
     def _has_words(self, text, word_list):
@@ -103,7 +106,7 @@ class Worker:
             for article in articles:
                 if self._meets_item_conditions(article):
                     try:
-                        self._telegram_handler.send_telegram_article(article)
+                        self.telegram_manager.send_telegram_article(article)
                     except Exception as e:
                         self.logger.error(f"{self._item_monitoring.get_search_query()} worker crashed: {e}")
                 self._notified_articles.insert(0, article)

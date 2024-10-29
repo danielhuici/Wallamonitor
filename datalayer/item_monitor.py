@@ -1,4 +1,3 @@
-import string
 
 class ItemMonitor:
     def __init__(self, search_query, latitude, longitude, max_distance,

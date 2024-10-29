@@ -1,6 +1,5 @@
 
-
-class Article:
+class WallapopArticle:
     def __init__(self, id, title, description, price, currency, location, allows_shipping, url):
         self._id = id
         self._title = title
@@ -48,9 +47,9 @@ class Article:
     def get_url(self):
         return self._url
 
-    def __eq__(self, article2):
-        return self.get_id() == article2.get_id()
+    def __eq__(self, article):
+        return self.get_id() == article.get_id()
 
     def __str__(self):
-        return f"Article(id={self._id}, title='{self._title}', description='{self._description}', " \
+        return f"Article(id={self._id}, title='{self._title}', " \
                f"price={self._price} {self._currency}, url='{self._url}')"

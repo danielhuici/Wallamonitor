@@ -1,10 +1,7 @@
-from article import Article
 import asyncio
-import threading
 import yaml
 import telegram
 import re
-
 
 ITEM_TEXT = "- *Artículo*: {}\n" \
             "- *Descripción*: {}\n" \
@@ -14,7 +11,7 @@ ITEM_TEXT = "- *Artículo*: {}\n" \
             "[Ir al anuncio](https://es.wallapop.com/item/{})"
 
 
-class TelegramHandler:
+class TelegramManager:
     def __init__(self):
         token, channel = self.get_config()
         self._channel = channel
