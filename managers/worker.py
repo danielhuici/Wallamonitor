@@ -5,9 +5,9 @@ from datalayer.wallapop_article import WallapopArticle
 from managers.telegram_manager import TelegramManager
 import traceback
 
-REQUEST_SLEEP_TIME = 10
+REQUEST_SLEEP_TIME = 15
 REQUEST_RETRY_TIME = 3
-ERROR_SLEEP_TIME = 10
+ERROR_SLEEP_TIME = 30
 NOTIFIED_ARTICLES_LIMIT = 300
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36'
 
@@ -15,7 +15,7 @@ class Worker:
     def __init__(self, item_to_monitor):
         self.logger = logging.getLogger(__name__)
         self._item_monitoring = item_to_monitor
-        self._notified_articles = self._request_articles()[1:]
+        self._notified_articles = self._request_articles()
         self.telegram_manager = TelegramManager()
 
     def _request_articles(self):
@@ -103,25 +103,28 @@ class Worker:
         while True:
             start_time = time.time()
             articles = self._request_articles()
+            new_articles = 0
             for article in articles:
                 if self._meets_item_conditions(article):
                     try:
                         self.telegram_manager.send_telegram_article(article)
+                        new_articles += 1
                     except Exception as e:
                         self.logger.error(f"{self._item_monitoring.get_search_query()} worker crashed: {e}")
                 self._notified_articles.insert(0, article)
                 self._notified_articles = self._notified_articles[:NOTIFIED_ARTICLES_LIMIT]
             time.sleep(REQUEST_SLEEP_TIME)
             exec_times.append(time.time() - start_time)
-            self.logger.debug(f"\'{self._item_monitoring.get_search_query()}\' node-> last: {exec_times[-1]}"
-                             f" max: {max(exec_times)} avg: {sum(exec_times) / len(exec_times)}")
+            self.logger.info(
+                f"Worker '{self._item_monitoring.get_search_query()}': {new_articles} new articles found. "
+                f"Execution time stats - Last: {exec_times[-1]:.2f}s, Max: {max(exec_times):.2f}s, "
+                f"Average: {sum(exec_times) / len(exec_times):.2f}s."
+            )
     
     def run(self):
         while True:
             try:
-                self.logger.info(f"Wallapop monitor worker started. Checking for "
-                                 f"new items containing '{self._item_monitoring.get_search_query()}' "
-                                 f"with given parameters periodically")
+                self.logger.info(f"Wallapop monitor worker started -  {self._item_monitoring.get_search_query()}")
                 self.work()
             except Exception as e:
                 self.logger.error(f"{''.join(traceback.format_exception(None, e, e.__traceback__))}")

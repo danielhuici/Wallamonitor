@@ -4,13 +4,14 @@ from logging.handlers import RotatingFileHandler
 from concurrent.futures import ThreadPoolExecutor
 
 from datalayer.item_monitor import ItemMonitor
-from worker import Worker
-from managers.telegram_manager import TelegramManager
+from managers.worker import Worker
 
 def configure_logger():
+    logging.getLogger("httpx").setLevel(logging.WARNING)
+
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.INFO)
-    console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+    console_handler.setFormatter(logging.Formatter('%(levelname)s [%(asctime)s] %(name)s - %(message)s'))
 
     file_handler = RotatingFileHandler('monitor.log', maxBytes=10e6)
     file_handler.setLevel(logging.DEBUG)
