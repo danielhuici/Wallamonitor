@@ -3,14 +3,11 @@
   **Automate your Wallapop searches and get notified on Telegram when new items are listed!**  
   This bot periodically searches Wallapop for new items based on your specific parameters and sends real-time notifications to your designated Telegram channel.
 
-  ---
-
   ## Table of Contents
   - [Setup](#setup-)
   - [Configuration](#configuration-)
   - [Parameters](#parameters-)
   - [Usage](#usage-)
-  ---
 
   ## Setup 🔧
 
@@ -24,9 +21,6 @@
      TELEGRAM_CHANNEL_ID: "@Your_Telegram_Channel_ID"
      TELEGRAM_TOKEN: "Your Telegram Token"
      ```
-
-
-  ---
 
   ## Configuration 🛠️
 
