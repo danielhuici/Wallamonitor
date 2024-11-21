@@ -6,7 +6,6 @@
   ## Table of Contents
   - [Setup](#setup-)
   - [Configuration](#configuration-)
-  - [Parameters](#parameters-)
   - [Usage](#usage-)
 
   ## Setup 🔧
