@@ -18,19 +18,29 @@ class Worker:
         self._notified_articles = self._request_articles()
         self.telegram_manager = TelegramManager()
 
-    def _request_articles(self):
+    def _create_url(self):
         url = (
-            f"http://api.wallapop.com/api/v3/general/search?keywords={self._item_monitoring.get_search_query()}"
-            f"&order_by=newest&latitude={self._item_monitoring.get_latitude()}"
-            f"&longitude={self._item_monitoring.get_longitude()}"
-            f"&distance={self._item_monitoring.get_max_distance()}"
-            f"&min_sale_price={self._item_monitoring.get_min_price()}" 
-            f"&max_sale_price={self._item_monitoring.get_max_price()}" 
-            f"&filters_source=quick_filters&language=es_ES"
+            f"http://api.wallapop.com/api/v3/search"
+            f"?source=search_box"
+            f"&keywords={self._item_monitoring._search_query}"
+            f"&order_by=newest"
+            f"&latitude={self._item_monitoring._latitude}"
+            f"&longitude={self._item_monitoring._longitude}"
+            f"&min_sale_price={self._item_monitoring._min_price}" 
+            f"&max_sale_price={self._item_monitoring._max_price}" 
+            f"&language=es_ES"
         )
+
+        if self._item_monitoring._max_distance != "0":
+            url += f"&distance={self._item_monitoring._max_distance}"
 
         if self._item_monitoring.get_condition() != "all":
             url += f"&condition={self._item_monitoring.get_condition()}"  # new, as_good_as_new, good, fair, has_given_it_all
+
+        return url
+
+    def _request_articles(self):
+        url = self._create_url()
 
         while True:
             try:
@@ -46,7 +56,8 @@ class Worker:
             time.sleep(REQUEST_RETRY_TIME)
 
         json_response = response.json()
-        articles = self._parse_json_response(json_response['search_objects'])
+        json_items = json_response['data']['section']['payload']['items']
+        articles = self._parse_json_response(json_items)
         return articles
 
     def _parse_json_response(self, json_response):

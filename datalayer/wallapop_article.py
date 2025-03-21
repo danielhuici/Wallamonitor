@@ -16,8 +16,8 @@ class WallapopArticle:
             json_data['id'],
             json_data['title'],
             json_data['description'],
-            json_data['price'],
-            json_data['currency'],
+            json_data['price']['amount'],
+            json_data['price']['currency'],
             json_data['location']['city'],
             json_data['shipping']['user_allows_shipping'],
             json_data['web_slug']
