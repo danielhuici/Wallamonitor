@@ -32,7 +32,7 @@ class Worker:
         )
 
         if self._item_monitoring._max_distance != "0":
-            url += f"&distance={self._item_monitoring._max_distance}"
+            url += f"&distance_in_km={self._item_monitoring._max_distance}"
 
         if self._item_monitoring.get_condition() != "all":
             url += f"&condition={self._item_monitoring.get_condition()}"  # new, as_good_as_new, good, fair, has_given_it_all
