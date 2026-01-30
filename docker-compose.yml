@@ -1,7 +1,7 @@
 version: '3.8'
 
 x-wallamonitor-template: &wallamonitor-base
-  build: .
+  build: . # or use git repo if you don't want to clone (e.g., https://github.com/danielhuici/Wallamonitor#main)
   restart: unless-stopped
   env_file:
     - path: ./.env
