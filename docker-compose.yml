@@ -21,5 +21,5 @@ services:
   #   <<: *wallamonitor-base
   #   container_name: wallamonitor-laptops
   #   volumes:
-  #     - ./env/laptops.env:/app/args.env:ro
+  #     - ./searches/laptops.json:/app/args.json:ro
 
