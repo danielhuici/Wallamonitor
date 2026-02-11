@@ -29,6 +29,8 @@ class Worker:
             f"&min_sale_price={self._item_monitoring._min_price}" 
             f"&max_sale_price={self._item_monitoring._max_price}" 
             f"&language=es_ES"
+            f"&section_type=organic_search_results"
+            
         )
 
         if self._item_monitoring._max_distance != "0":
@@ -141,3 +143,4 @@ class Worker:
                 self.logger.error(f"{''.join(traceback.format_exception(None, e, e.__traceback__))}")
                 self.logger.error(f"{self._item_monitoring.get_search_query()} worker crashed. Restarting worker...")
                 time.sleep(ERROR_SLEEP_TIME)
+
