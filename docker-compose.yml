@@ -1,0 +1,25 @@
+version: '3.8'
+
+x-wallamonitor-template: &wallamonitor-base
+  build: . # or use git repo if you don't want to clone (e.g., https://github.com/danielhuici/Wallamonitor#main)
+  restart: unless-stopped
+  env_file:
+    - path: ./.env
+      required: true
+  environment:
+    TZ: Europe/Madrid
+
+
+services:
+  wallamonitor-example:
+    <<: *wallamonitor-base
+    container_name: wallamonitor-example
+    volumes:
+      - ./searches/example.json:/app/args.json:ro
+
+  # wallamonitor-laptops:
+  #   <<: *wallamonitor-base
+  #   container_name: wallamonitor-laptops
+  #   volumes:
+  #     - ./searches/laptops.json:/app/args.json:ro
+

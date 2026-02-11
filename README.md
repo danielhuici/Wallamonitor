@@ -7,6 +7,7 @@
   - [Setup](#setup-)
   - [Configuration](#configuration-)
   - [Usage](#usage-)
+  - [Docker Setup](#docker-setup-)
 
   ## Setup 🔧
 
@@ -54,6 +55,81 @@ Check out [args.json](./args.json) for an example
      ```
 
   The bot will monitor Wallapop periodically (default 15s) and send notifications to your specified Telegram channel whenever new items match your criteria.
+
+  ## Docker Setup 🐳
+
+  Wallamonitor can be easily deployed using Docker, which provides an isolated environment and simplifies dependency management.
+
+  ### Prerequisites
+
+  - Docker installed on your system ([Download Docker](https://www.docker.com/get-started))
+  - Docker Compose (usually included with Docker Desktop)
+
+  ### Environment Setup
+
+  1. Create a `.env` file in the project root with your Telegram credentials:
+     ```env
+     TELEGRAM_CHANNEL=@Your_Telegram_Channel_ID
+     TELEGRAM_TOKEN=Your_Telegram_Bot_Token
+     ```
+
+  2. Create your search configuration file in the `searches/` directory (e.g., `searches/example.json`):
+     ```json
+     [
+       {
+         "search_query": "iphone",
+         "latitude": "40.4165",
+         "longitude": "-3.70256",
+         "max_distance": "0",
+         "condition": "all",
+         "min_price": "0",
+         "max_price": "200",
+         "title_exclude": [],
+         "description_exclude": [],
+         "title_must_include": [],
+         "title_first_word_exclude": "",
+         "description_must_include": []
+       }
+     ]
+     ```
+
+  ### Running with Docker Compose
+
+  The `docker-compose.yml` includes a template service that you can customize:
+
+  1. **Start the default example service:**
+     ```bash
+     docker-compose up -d wallamonitor-example
+     ```
+
+  2. **Add your own monitoring service:**
+     
+     Edit `docker-compose.yml` and add a new service (uncomment and modify the laptops example):
+     ```yaml
+     wallamonitor-laptops:
+       <<: *wallamonitor-base
+       container_name: wallamonitor-laptops
+       volumes:
+         - ./searches/laptops.json:/app/args.json:ro
+     ```
+
+  3. **Run multiple monitors simultaneously:**
+     ```bash
+     docker-compose up -d
+     ```
+     
+     This will start all configured services at once, each monitoring different search criteria.
+
+  4. **View logs:**
+     ```bash
+     docker-compose logs -f wallamonitor-example
+     ```
+
+  5. **Stop the services:**
+     ```bash
+     docker-compose down
+     ```
+
 
   ---
 
