@@ -1,5 +1,5 @@
 import asyncio
-import yaml
+import os
 import telegram
 import re
 
@@ -13,19 +13,15 @@ ITEM_TEXT = "- *Artículo*: {}\n" \
 
 class TelegramManager:
     def __init__(self):
-        token, channel = self.get_config()
-        self._channel = channel
-        self._bot = telegram.Bot(token=token)
+        self._channel = os.getenv("TELEGRAM_CHANNEL_ID")
+        self._token = os.getenv("TELEGRAM_BOT_TOKEN")
+
+        if not self._channel or not self._token:
+            raise RuntimeError("TELEGRAM_CHANNEL_ID and TELEGRAM_BOT_TOKEN must be set")
+
+        self._bot = telegram.Bot(token=self._token)
         self._loop = asyncio.new_event_loop()
         asyncio.set_event_loop(self._loop)
-
-    def get_config(self):
-        config_file = 'config.yaml'
-        with open(config_file, 'r') as file:
-            config = yaml.safe_load(file)
-            token = config['telegram_token']
-            telegram_channel = config['telegram_channel']
-        return token, telegram_channel
 
     
     def escape_markdown(self, text):

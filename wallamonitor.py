@@ -3,6 +3,8 @@ import logging
 from logging.handlers import RotatingFileHandler
 from concurrent.futures import ThreadPoolExecutor
 
+from dotenv import load_dotenv
+
 from datalayer.item_monitor import ItemMonitor
 from managers.worker import Worker
 
@@ -28,6 +30,7 @@ def parse_items_to_monitor():
     return items
 
 if __name__ == "__main__":
+    load_dotenv()
     configure_logger()
     items = parse_items_to_monitor()
 

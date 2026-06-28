@@ -16,10 +16,10 @@
      pip3 install -r requirements.txt
      ```
 
-  2. Configure your Telegram details in `config.yaml`:
-     ```yaml
-     TELEGRAM_CHANNEL_ID: "@Your_Telegram_Channel_ID"
-     TELEGRAM_TOKEN: "Your Telegram Token"
+  2. Configure your Telegram credentials in a `.env` file (used by both local and Docker runs):
+     ```env
+     TELEGRAM_BOT_TOKEN=Your_Telegram_Bot_Token
+     TELEGRAM_CHANNEL_ID=@Your_Telegram_Channel_ID
      ```
 
   ## Configuration 🛠️
@@ -69,8 +69,8 @@ Check out [args.json](./args.json) for an example
 
   1. Create a `.env` file in the project root with your Telegram credentials:
      ```env
-     TELEGRAM_CHANNEL=@Your_Telegram_Channel_ID
-     TELEGRAM_TOKEN=Your_Telegram_Bot_Token
+     TELEGRAM_BOT_TOKEN=Your_Telegram_Bot_Token
+     TELEGRAM_CHANNEL_ID=@Your_Telegram_Channel_ID
      ```
 
   2. Create your search configuration file in the `searches/` directory (e.g., `searches/example.json`):
