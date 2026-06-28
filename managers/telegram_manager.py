@@ -3,12 +3,19 @@ import os
 import telegram
 import re
 
-ITEM_TEXT = "- *Artículo*: {}\n" \
-            "- *Descripción*: {}\n" \
-            "- *Localidad*: {}\n" \
-            "- *Precio*: {} {}\n" \
-            "- *Acepta envíos*: {}\n" \
-            "[Ir al anuncio](https://es.wallapop.com/item/{})"
+ITEM_TEXT = "🛍️ *Artículo*: {}\n" \
+            "\n" \
+            "📝 *Descripción*: {}\n" \
+            "\n" \
+            "📍 *Localidad*: {}\n" \
+            "💶 *Precio*: {} {}\n" \
+            "\n" \
+            "{}\n" \
+            "\n" \
+            "🔗 [Ir al anuncio](https://es.wallapop.com/item/{})"
+
+SHIPPING_ALLOWED = "✅ Acepta envíos"
+SHIPPING_NOT_ALLOWED = "⚠️ No acepta envíos"
 
 
 class TelegramManager:
@@ -25,17 +32,20 @@ class TelegramManager:
 
     
     def escape_markdown(self, text):
-        special_chars = r'_[\]()~`>#\+\-=|{}.!]'
-        escaped_text = re.sub(f'([{re.escape(special_chars)}])', r'\\\1', text)
+        special_chars = r'_*[]()~`>#+-=|{}.!'
+        escaped_text = re.sub(f'([{re.escape(special_chars)}])', r'\\\1', str(text))
         return escaped_text
 
     def send_telegram_article(self, article):
         self._loop.run_until_complete(self.send_telegram_article_async(article))
 
     async def send_telegram_article_async(self, article):
-        message = ITEM_TEXT.format(article.get_title(), self.escape_markdown(article.get_description()),
-                                   self.escape_markdown(article.get_location()), article.get_price(), 
-                                   article.get_currency(), article.get_allows_shipping(),
+        shipping_text = SHIPPING_ALLOWED if article.get_allows_shipping() else SHIPPING_NOT_ALLOWED
+        message = ITEM_TEXT.format(self.escape_markdown(article.get_title()),
+                                   self.escape_markdown(article.get_description()),
+                                   self.escape_markdown(article.get_location()),
+                                   self.escape_markdown(article.get_price()),
+                                   self.escape_markdown(article.get_currency()),
+                                   self.escape_markdown(shipping_text),
                                    article.get_url())
-        escaped_message = self.escape_markdown(message)
-        await self._bot.send_message(self._channel, text=escaped_message, parse_mode="MarkdownV2")
+        await self._bot.send_message(self._channel, text=message, parse_mode="MarkdownV2")
